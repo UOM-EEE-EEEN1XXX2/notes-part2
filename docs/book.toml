@@ -17,7 +17,7 @@ git-repository-url = "https://github.com/UOM-EEE-EEEN1XXX2/notes-part2"
 git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/UOM-EEE-EEEN1XXX2/notes-part2/edit/master/guide/{path}"
 site-url = "/book/"
-cname = "myproject.rs"
+cname = "https://uom-eee-eeen1xxx2.github.io/notes-part2/"
 input-404 = "not-found.md"
 
 [output.html.print]

@@ -15,6 +15,7 @@ jobs:
         with:
            mdbook-version: 'latest'
       - run: cd docs
+      - run: ls
       - run: mdbook build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

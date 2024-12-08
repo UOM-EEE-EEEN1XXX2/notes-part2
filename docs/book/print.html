@@ -44,6 +44,7 @@
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
+                var font_store = localStorage.getItem('mdbook-font');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -51,6 +52,10 @@
 
                 if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
                     localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+
+                if (font_store.startsWith('"') && font_store.endsWith('"')) {
+                    localStorage.setItem('mdbook-font', sidebar.slice(1, sidebar.length - 1));
                 }
             } catch (e) { }
         </script>
@@ -66,6 +71,12 @@
             var body = document.querySelector('body');
             body.classList.remove('no-js')
             body.classList.add('js');
+
+            var font;
+            try { font = localStorage.getItem('mdbook-font'); } catch(e) { }
+            if (font === null || font === undefined) { font = "font-roboto"; }
+            html.classList.remove("font-roboto");
+            html.classList.add(font);
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
@@ -88,7 +99,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html">Welcome</a></li><li class="chapter-item expanded "><a href="1_intro.html">Introduction</a></li><li class="chapter-item expanded "><a href="2_getting_started.html">Getting started</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded affix "><a href="copyright.html">The University of Manchester</a></li><li class="chapter-item expanded affix "><a href="copyright.html">Canvas</a></li><li class="chapter-item expanded affix "><a href="copyright.html">Copyright information</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> Welcome</a></li><li class="chapter-item expanded "><a href="1_intro.html"><strong aria-hidden="true">2.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="2_getting_started.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li class="chapter-item expanded affix "><li class="spacer"></li><li class="chapter-item expanded affix "><a href="copyright.html">The University of Manchester</a></li><li class="chapter-item expanded affix "><a href="copyright.html">Canvas</a></li><li class="chapter-item expanded affix "><a href="copyright.html">Copyright information</a></li></ol>
                 <a href="https://www.manchester.ac.uk/"><img src="./img/uom_logo_white.png" alt="University of Manchester logo" style="width: calc(var(--sidebar-width)*0.92)"></a>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
@@ -140,6 +151,15 @@
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="font-toggle" class="icon-button" type="button" title="Change font" aria-label="Change font" aria-haspopup="true" aria-expanded="false" aria-controls="font-list">
+                            <i class="fa fa-font"></i>
+                        </button>
+                        <ul id="font-list" class="font-popup" aria-label="Fonts" role="menu">
+                            <li role="none"><button role="menuitem" class="font" id="font-roboto">Roboto (default)</button></li>
+                            <li role="none"><button role="menuitem" class="font" id="font-opendyslexic">OpenDyslexic</button></li>
+                            <li role="none"><button role="menuitem" class="font" id="font-opensans">Open Sans</button></li>
+                            <li role="none"><button role="menuitem" class="font" id="font-times">Times</button></li>
                         </ul>
                         <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>

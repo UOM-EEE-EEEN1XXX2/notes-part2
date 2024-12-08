@@ -695,3 +695,128 @@ function playground_text(playground, hidden = true) {
         document.addEventListener('scroll', updateBorder, { passive: true });
     })();
 })();
+
+
+
+
+
+(function fonts() {
+    var html = document.querySelector('html');
+    var fontToggleButton = document.getElementById('font-toggle');
+    var fontPopup = document.getElementById('font-list');
+
+    function showFonts() {
+        fontPopup.style.display = 'block';
+        fontToggleButton.setAttribute('aria-expanded', true);
+        fontPopup.querySelector("button#" + get_font()).focus();
+    }
+
+    function hideFonts() {
+        fontPopup.style.display = 'none';
+        fontToggleButton.setAttribute('aria-expanded', false);
+        fontToggleButton.focus();
+    }
+
+    fontToggleButton.addEventListener('click', function () {
+        if (fontPopup.style.display === 'block') {
+            hideFonts();
+        } else {
+            showFonts();
+        }
+    });
+
+    fontPopup.addEventListener('focusout', function(e) {
+        // e.relatedTarget is null in Safari and Firefox on macOS (see workaround below)
+        if (!!e.relatedTarget && !fontToggleButton.contains(e.relatedTarget) && !fontPopup.contains(e.relatedTarget)) {
+            hideFonts();
+        }
+    });
+
+    // Should not be needed, but it works around an issue on macOS & iOS: https://github.com/rust-lang/mdBook/issues/628
+    document.addEventListener('click', function(e) {
+        if (fontPopup.style.display === 'block' && !fontToggleButton.contains(e.target) && !fontPopup.contains(e.target)) {
+            hideFonts();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) { return; }
+        if (!fontPopup.contains(e.target)) { return; }
+
+        switch (e.key) {
+            case 'Escape':
+                e.preventDefault();
+                hideFonts();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                var li = document.activeElement.parentElement;
+                if (li && li.previousElementSibling) {
+                    li.previousElementSibling.querySelector('button').focus();
+                }
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                var li = document.activeElement.parentElement;
+                if (li && li.nextElementSibling) {
+                    li.nextElementSibling.querySelector('button').focus();
+                }
+                break;
+            case 'Home':
+                e.preventDefault();
+                fontPopup.querySelector('li:first-child button').focus();
+                break;
+            case 'End':
+                e.preventDefault();
+                fontPopup.querySelector('li:last-child button').focus();
+                break;
+        }
+    });
+
+    // Get/set font
+    function updateFontSelected() {
+        fontPopup.querySelectorAll('.font-selected').forEach(function (el) {
+            el.classList.remove('font-selected');
+        });
+        fontPopup.querySelector("button#" + get_font()).classList.add('font-selected');
+    }
+
+    function get_font() {
+        var font;
+        try { font = localStorage.getItem('mdbook-font'); } catch (e) { }
+        if (font === null || font === undefined) {
+            return "font-roboto"; // default is hard coded
+        } else {
+            return font;
+        }
+    }
+
+    function set_font(font, store = true) {
+        var previousFont = get_font();
+
+        if (store) {
+            try { localStorage.setItem('mdbook-font', font); } catch (e) { }
+        }
+
+        html.classList.remove(previousFont);
+        html.classList.add(font);
+        updateFontSelected();
+    }
+
+    var font = get_font();
+
+    set_font(font, false);
+
+    fontPopup.addEventListener('click', function (e) {
+        var font;
+        if (e.target.className === "font") {
+            font = e.target.id;
+        } else if (e.target.parentElement.className === "font") {
+            font = e.target.parentElement.id;
+        } else {
+            return;
+        }
+        set_font(font);
+    });
+
+})();
